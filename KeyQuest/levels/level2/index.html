@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key Quest - Level 2 | The Dark Caverns</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="game-container level2-container">
+        <!-- Game Header with Dark Theme -->
+        <div class="game-header level2-header">
+            <div class="level-badge level2-badge">
+                <span class="badge-glow"></span>
+                LEVEL 2
+            </div>
+            <div class="title level2-title">THE DARK CAVERNS</div>
+            <div class="stats-container level2-stats">
+                <div class="stat-item lives">
+                    <span class="stat-icon">❤️</span>
+                    <span class="stat-value" id="lives-display">3</span>
+                </div>
+                <div class="stat-item gems">
+                    <span class="stat-icon">💎</span>
+                    <span class="stat-value" id="gems-display">0</span>
+                </div>
+                <div class="stat-item key">
+                    <span class="stat-icon">🔑</span>
+                    <span class="stat-value" id="key-display">✗</span>
+                </div>
+                <div class="stat-item timer">
+                    <span class="stat-icon">⏱️</span>
+                    <span class="stat-value" id="timer-display">02:00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Canvas - FIXED: id="gameCanvas" not inside brackets -->
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Game Footer with Dark Theme -->
+        <div class="game-footer level2-footer">
+            <div class="cave-glow"></div>
+            <div class="controls-hint">
+                <span class="key-hint">← →</span> MOVE •
+                <span class="key-hint">↑</span> JUMP •
+                <span class="key-hint">ESC</span> MENU
+            </div>
+            <div class="cave-indicator">🌑 DARK CAVERNS</div>
+        </div>
+    </div>
+
+    <!-- Camera Indicator (shows you're in a cavern) -->
+    <!-- <div class="camera-indicator" id="cameraIndicator">
+        <span>🔦</span> CAVERN VIEW
+    </div> -->
+    <!-- Night Indicator -->
+    <!-- <div class="night-indicator" id="nightIndicator">
+        <span>🌙</span> NIGHT MODE • DEEP BLUE
+    </div> -->
+
+    <!-- Floating Elements -->
+    <div class="floating-crystal-1">💎</div>
+    <div class="floating-crystal-2">🔮</div>
+
+    <script src="./js/data/collisions.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

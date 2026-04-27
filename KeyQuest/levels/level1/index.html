@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key Quest - Level 1 | The Lost Treasure</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <div class="level-badge">LEVEL 1</div>
+            <div class="title">THE LOST TREASURE</div>
+            <div class="stats-container">
+                <div class="stat-item lives">
+                    <span class="stat-icon">❤️</span>
+                    <span class="stat-value" id="lives-display">3</span>
+                </div>
+                <div class="stat-item gems">
+                    <span class="stat-icon">💎</span>
+                    <span class="stat-value" id="gems-display">0/8</span>
+                </div>
+                <div class="stat-item key">
+                    <span class="stat-icon">🔑</span>
+                    <span class="stat-value" id="key-display">✗</span>
+                </div>
+                <div class="stat-item timer">
+                    <span class="stat-icon">⏱️</span>
+                    <span class="stat-value" id="timer-display">00:30</span>
+                </div>
+            </div>
+
+        </div>
+        <canvas id="gameCanvas"></canvas>
+
+        <div class="game-footer">
+            <div class="controls-hint">
+                <span>← →</span> MOVE • <span>↑</span> JUMP • <span>ESC</span> MENU
+            </div>
+        </div>
+    </div>
+    <!-- Custom Menus (hidden by default) -->
+    <div class="menu-overlay" id="menuOverlay">
+        <div class="menu-content">
+            <h1 class="game-title">KEY QUEST</h1>
+            <p class="game-subtitle">The Lost Treasure</p>
+
+            <div class="menu-buttons">
+                <button class="menu-btn primary" id="startBtn">START ADVENTURE</button>
+                <button class="menu-btn secondary" id="aboutBtn">ABOUT</button>
+            </div>
+
+            <div class="menu-footer">
+                <p>© 2024 Key Quest • Adventure</p>
+            </div>
+        </div>
+    </div>
+    <div class="menu-overlay" id="aboutOverlay" style="display: none;">
+        <div class="menu-content about-content">
+            <h2>HOW TO PLAY</h2>
+
+            <div class="about-grid">
+                <div class="about-item">
+                    <span class="about-icon">← →</span>
+                    <p>Move left/right</p>
+                </div>
+                <div class="about-item">
+                    <span class="about-icon">↑</span>
+                    <p>Jump</p>
+                </div>
+                <div class="about-item">
+                    <span class="about-icon">💎</span>
+                    <p>Collect gems</p>
+                </div>
+                <div class="about-item">
+                    <span class="about-icon">🔑</span>
+                    <p>Find the key</p>
+                </div>
+                <div class="about-item">
+                    <span class="about-icon">🚪</span>
+                    <p>Reach the door</p>
+                </div>
+                <div class="about-item">
+                    <span class="about-icon">🕳️</span>
+                    <p>Avoid holes</p>
+                </div>
+            </div>
+            <button class="menu-btn secondary" id="backFromAboutBtn">BACK</button>
+        </div>
+    </div>
+    <div class="menu-overlay" id="winOverlay" style="display: none;">
+        <div class="menu-content win-content">
+            <h2 class="win-title">VICTORY!</h2>
+            <p class="win-subtitle">You found the treasure!</p>
+
+            <div class="stats-summary">
+                <div class="summary-item">
+                    <span class="summary-label">Gems Collected</span>
+                    <span class="summary-value" id="winGems">0/8</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Time Remaining</span>
+                    <span class="summary-value" id="winTime">00:00</span>
+                </div>
+            </div>
+            <div class="menu-buttons">
+                <button class="menu-btn primary" id="restartBtn">PLAY AGAIN</button>
+                <button class="menu-btn secondary" id="nextLevelBtn">NEXT LEVEL →</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu-overlay" id="gameOverOverlay" style="display: none;">
+        <div class="menu-content gameover-content">
+            <h2 class="gameover-title">GAME OVER</h2>
+            <p class="gameover-subtitle">Your adventure ends here...</p>
+
+            <div class="stats-summary">
+                <div class="summary-item">
+                    <span class="summary-label">Gems Found</span><span class="summary-value" id="gameoverGems">0</span>
+                </div>
+            </div>
+
+            <div class="menu-buttons">
+                <button class="menu-btn primary" id="gameoverRestartBtn">TRY AGAIN</button>
+                <button class="menu-btn secondary" id="gameoverHomeBtn">MAIN MENU</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // MENU CONTROLS - ADD THIS BEFORE main.js
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get all overlays
+            const menuOverlay = document.getElementById('menuOverlay');
+            const aboutOverlay = document.getElementById('aboutOverlay');
+            const winOverlay = document.getElementById('winOverlay');
+            const gameOverOverlay = document.getElementById('gameOverOverlay');
+
+            // Get all buttons
+            const startBtn = document.getElementById('startBtn');
+            const aboutBtn = document.getElementById('aboutBtn');
+            const backBtn = document.getElementById('backFromAboutBtn');
+            const restartBtn = document.getElementById('restartBtn');
+            const nextBtn = document.getElementById('nextLevelBtn');
+            const gameoverRestart = document.getElementById('gameoverRestartBtn');
+            const gameoverHome = document.getElementById('gameoverHomeBtn');
+
+            // START BUTTON
+            if (startBtn) {
+                startBtn.addEventListener('click', function () {
+                    menuOverlay.style.display = 'none';
+                    window.gameState = 'playing';
+                    if (typeof resetGame === 'function') resetGame();
+                });
+            }
+
+            // ABOUT BUTTON
+            if (aboutBtn) {
+                aboutBtn.addEventListener('click', function () {
+                    menuOverlay.style.display = 'none';
+                    aboutOverlay.style.display = 'flex';
+                });
+            }
+
+            // BACK FROM ABOUT
+            if (backBtn) {
+                backBtn.addEventListener('click', function () {
+                    aboutOverlay.style.display = 'none';
+                    menuOverlay.style.display = 'flex';
+                });
+            }
+
+            // RESTART FROM WIN MENU
+            if (restartBtn) {
+                restartBtn.addEventListener('click', function () {
+                    winOverlay.style.display = 'none';
+                    window.gameState = 'playing';
+                    if (typeof resetGame === 'function') resetGame();
+                });
+            }
+
+            // NEXT LEVEL
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function () {
+                    window.location.href = '../level2/index.html';
+                });
+            }
+
+            // GAME OVER RESTART
+            if (gameoverRestart) {
+                gameoverRestart.addEventListener('click', function () {
+                    gameOverOverlay.style.display = 'none';
+                    window.gameState = 'playing';
+                    if (typeof resetGame === 'function') resetGame();
+                });
+            }
+
+            // GAME OVER HOME
+            if (gameoverHome) {
+                gameoverHome.addEventListener('click', function () {
+                    gameOverOverlay.style.display = 'none';
+                    menuOverlay.style.display = 'flex';
+                    window.gameState = 'menu';
+                });
+            }
+
+            // ESC KEY to close about
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    if (aboutOverlay && aboutOverlay.style.display === 'flex') {
+                        aboutOverlay.style.display = 'none';
+                        menuOverlay.style.display = 'flex';
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script src="./js/data/collisions1.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
